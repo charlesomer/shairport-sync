@@ -53,7 +53,7 @@ jobs:
           context: ./
           file: ./docker/Dockerfile
           platforms: ${{ env.DOCKER_PLATFORMS }}
-          push: ${{ env.IMAGE_TAG_BASE != "" }}
+          push: ${{ env.IMAGE_TAG_BASE != '' }}
           tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG_BASE }}
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
@@ -65,7 +65,7 @@ jobs:
           context: ./
           file: ./docker/classic/Dockerfile
           platforms: ${{ env.DOCKER_PLATFORMS }}
-          push: ${{ env.IMAGE_TAG_BASE != "" }}
+          push: ${{ env.IMAGE_TAG_BASE != '' }}
           tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG_BASE }}-classic
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
