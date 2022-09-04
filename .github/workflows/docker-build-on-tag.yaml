@@ -1,10 +1,7 @@
-# Builds & pushes a docker image when a tag occurs.
-# It seems this yaml has to exist on the branch the tag refers to.
+# Builds & pushes a docker image when a tag is created.
+# Tag pattern: '[tag]' & '[tag]-classic'
 
-# The following docker tags are created & pushed:
-# [RELEASE TAG], [RELEASE TAG]-classic,
-
-name: Build and push docker images on releases.
+name: Build and push docker (tag)
 
 on:
   push:
@@ -32,13 +29,15 @@ jobs:
       - name: Set tag env
         run: echo "GIT_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - name: Determine NQPTP env (part 1).
+      - name: Is branch "master"?
+        if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'master' }}
+        run: |
+          echo "NQPTP_BRANCH=main" >> $GITHUB_ENV
+
+      - name: Is branch "development"?
         if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'development' }}
-        run: echo "NQPTP_BRANCH=development" >> $GITHUB_ENV
-      
-      - name: Determine NQPTP env (part 2).
-        if: ${{ env.SHAIRPORT_SYNC_BRANCH != 'development' }}
-        run: echo "NQPTP_BRANCH=main" >> $GITHUB_ENV
+        run: |
+          echo "NQPTP_BRANCH=development" >> $GITHUB_ENV
         
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -59,7 +58,7 @@ jobs:
           context: ./
           file: ./docker/Dockerfile
           platforms: ${{ env.DOCKER_PLATFORMS }}
-          push: true
+          push: ${{ env.IMAGE_TAG_BASE != '' }}
           tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.GIT_TAG }}
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
@@ -71,7 +70,7 @@ jobs:
           context: ./
           file: ./docker/classic/Dockerfile
           platforms: ${{ env.DOCKER_PLATFORMS }}
-          push: true
+          push: ${{ env.IMAGE_TAG_BASE != '' }}
           tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.GIT_TAG }}-classic
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
