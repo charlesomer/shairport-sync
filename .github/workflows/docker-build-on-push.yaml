@@ -1,11 +1,11 @@
-# Builds & pushes a docker image when a commit is made to development (or "master" in the future).
+# Builds & pushes a docker image when a commit is made.
 # Tag pattern: '[branch]' & '[branch]-classic'
 
 name: Build and push docker (commit)
 
 on:
   push:
-    branches: [ development ]
+    branches: [ master, development ]
 
 env:
   DOCKER_PLATFORMS: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
