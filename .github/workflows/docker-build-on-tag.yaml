@@ -56,6 +56,6 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.GIT_TAG }}
-            ${{ STABLE_TAG == 'true' && ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.GIT_TAG }} || '' }}
+            ${{ env.STABLE_TAG == 'true' && ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.GIT_TAG }} || '' }}
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
