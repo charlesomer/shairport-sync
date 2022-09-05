@@ -1,4 +1,4 @@
-# Original AirPlay 1 Only Docker Image
+# Original AirPlay 1 (Classic) Only Docker Image
 
 ## Basic Usage
 
