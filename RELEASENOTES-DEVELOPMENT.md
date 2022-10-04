@@ -1,3 +1,71 @@
+Version 4.1-dev-604-gf96fa2f7
+====
+**Bug Fix**
+* If the D-Bus interface was enabled, each change in volume control was calling the volume event hook twice. Fixed.
+
+Version 4.1-dev-601-g98744211
+====
+**Bug Fix**
+* Recent versions of Shairport Sync have a "heartbeat" checker, to try to determine when the client has stopped running without warning -- typically when it has gone to sleep. Unfortunately, it interferes with some non-Apple clients, so it has been disabled in this update.
+
+Version 4.1-dev-599-g2bc62c7d
+====
+
+**Enhancements**
+* Added some GitHub Actions to test different combinations of builds -- hopefully the result will be fewer bugs. Thanks to [Charles Omer](https://github.com/charlesomer) for the inspiration to try these in the first place.
+
+**Bug Fixes**
+* Fixed a bug where the DAC was not closed after the active timeout when the `alsa` `disable_standby_mode` was set to `"auto"`. Thanks to [Tim Curtis](https://github.com/moodeaudio) for an exemplary [bug report](https://github.com/mikebrady/shairport-sync/issues/1546).
+* Fixed a couple of bugs (found with GitHub Actions) in the installers on both `systemd` and System V systems. 
+
+Version 4.1-dev-551-g30aaabc4
+====
+**Update**
+* Updated to the latest version of the [`pair_ap`](https://github.com/ejurgensen/pair_ap) library. Thanks again to [ejurgensen](https://github.com/ejurgensen/pair_ap/commits?author=ejurgensen) for this invaluable resource.
+
+**Enhancement**
+* Removed the requirement for the [`libgcrypt`](https://gnupg.org/software/libgcrypt/index.html) library. OpenSSL is mandatory for other parts of Shairport Sync when operating in the AirPlay 2 mode and is now used in place of `libgcrypt`.
+
+Version 4.1-dev-548-g7dc077e2
+====
+* Removed the workaround for the apparent bug in AirPlay 2 Buffered Streams in iOS 16.0. A number of approaches were tried. The most aurally successful is left in the code but is disabled. Basically, it delays the timing of the frames following the 2,112 frame discontinuity by 2,112 frames. This eliminates the timing discontinuity but delays the AirPlay stream by 47.9 ms, and this can be heard in some situations. So it looks as if the bug -- if that's what it is -- can't easily be worked around. It has not been fixed by iOS 16.0.2, unfortunately.
+
+Version 4.1-dev-543-g24f06b81
+====
+**Enhancements**
+* Add a workaround for an apparent bug in AirPlay 2 Buffered Streams in iOS 16.0. After playing exactly 22,528 frames of audio, iOS 16.0 sends 2,112 frames of audio with the same timestamps as the previous 2,112 frames. This makes the frames that follow 47.9 ms (2112/44100 seconds) late. The workaround is to drop these extra 2,112 frames.
+* If an AirPlay 2 Buffered Streams is being skipped or scrubbed, the audio that follows will generate an audible click due to an AAC decoding transient because preceding audio frames are missing. Shairport Sync now mutes the first 2,048 frames, down from 3,072 frames before.
+
+**Bug Fix**
+* Give the RTSP idle checker a longer timeout -- 10 seconds -- and confine its operation to AirPlay 2 Runtime Streams and classic AirPlay only. This is to stop an occasional RTSP idle timeout silencing an AirPlay 2 Buffered Audio session.
+
+Version 4.1-dev-532-g8dfebea2
+====
+**Enhancements**
+* Improve the response of Shairport Sync when a Mac is woken up from sleep and continues playing e.g. a YouTube video. Shairport Sync should resume play in most circumstances. (BTW, the HomePod mini does not resume in these circumstances.)
+
+**Bug Fix**
+* Make the RTSP idle checker a bit more resilient -- wait for the full timeout even if interrupted by e.g. `SIGINT`. Also signal to NQPTP when to stop listening when a session goes idle or stops.
+
+Version 4.1-dev-526-gfd880056
+====
+***Pesky Changes You Can't Ignore***
+
+* **Important**. Please update and re-enable NQPTP. The Shared Memory Interface protocol that Shairport Sync and NQPTP use to communicate with one another has been updated to reflect changes in NQPTP's operation.
+
+Apart from moving to the new SMI interface for NQPTP, this update consists of many small enhancements and bug fixes. (Yeah, and the build number really did go backwards...)
+
+Version 4.1-dev-535-gdafd1726
+====
+**Bug Fix**
+* Fix yet another bug in the Makefile.am. Thanks to [Isioma Nnodum](https://github.com/mikebrady/shairport-sync/issues?q=is%3Apr+author%3Aicompuiz) for finding and [fixing](https://github.com/mikebrady/shairport-sync/pull/1536) it.
+
+Version 4.1-dev-520-g1092a8c1
+====
+**Enhancements**
+* It is now possible to build Shairport Sync in a separate directory, thanks mainly to the work [#1493](https://github.com/mikebrady/shairport-sync/pull/1493) and [#1500](https://github.com/mikebrady/shairport-sync/pull/1500) of [Lukas Rusak](https://github.com/lrusak). A number of subsequent changes were necessary to make it work for FreeBSD.
+* Shairport Sync should build on piCore. Thanks to [jackaroo](https://github.com/94jackaroo) for [reporting](https://github.com/mikebrady/shairport-sync/pull/1528) and checking.
+
 Version 4.1-dev-516-ga617e607
 ====
 **Updates and Enhancements**

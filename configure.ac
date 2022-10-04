@@ -75,21 +75,18 @@ fi
 
 AC_ARG_WITH([dummy],[AS_HELP_STRING([--with-dummy],[include the dummy audio back end])])
 if test "x$with_dummy" = "xyes" ; then
-  AC_MSG_RESULT(include the dummy audio back end)
   AC_DEFINE([CONFIG_DUMMY], 1, [Include a fake audio backend.])
 fi
 AM_CONDITIONAL([USE_DUMMY], [test "x$with_dummy" = "xyes" ])
 
 AC_ARG_WITH([stdout],[AS_HELP_STRING([--with-stdout],[include the stdout audio back end])])
 if test "x$with_stdout" = "xyes" ; then
-  AC_MSG_RESULT(include the stdout audio back end)
   AC_DEFINE([CONFIG_STDOUT], 1, [Include an audio backend to output to standard output (stdout).])
 fi
 AM_CONDITIONAL([USE_STDOUT], [test "x$with_stdout" = "xyes"])
 
 AC_ARG_WITH([pipe],[AS_HELP_STRING([--with-pipe],[include the pipe audio back end])])
 if test "x$with_pipe" = "xyes" ; then
-  AC_MSG_RESULT(include the pipe audio back end)
   AC_DEFINE([CONFIG_PIPE], 1, [Include an audio backend to output to a unix pipe.])
 fi
 AM_CONDITIONAL([USE_PIPE], [test "x$with_pipe" = "xyes" ])
@@ -320,9 +317,9 @@ if test "x$with_pw" = "xyes" ; then
     PKG_CHECK_MODULES(
       [PIPEWIRE], [libpipewire-0.3 >= 0.3.24],
       [CFLAGS="${PIPEWIRE_CFLAGS} ${CFLAGS} -Wno-missing-field-initializers" LIBS="${PIPEWIRE_LIBS} ${LIBS}"],
-      [AC_MSG_ERROR(Pipewire support requires the libpipewire-dev library!)])
+      [AC_MSG_ERROR(Pipewire support requires the libpipewire library -- libpipewire-0.3-dev suggested!)])
   else
-    AC_CHECK_LIB([pipewire], [pw_stream_queue_buffer], , AC_MSG_ERROR(Pipewire support requires the libpipewire-dev library.))
+    AC_CHECK_LIB([pipewire], [pw_stream_queue_buffer], , AC_MSG_ERROR(Pipewire support requires the libpipewire library -- libpipewire-0.3-dev suggested!))
   fi
 fi
 AM_CONDITIONAL([USE_PW], [test "x$with_pw" = "xyes"])
@@ -409,15 +406,14 @@ AM_CONDITIONAL([USE_METADATA], [test "x$with_metadata" = "xyes"])
 AC_ARG_WITH(airplay-2, [AS_HELP_STRING([--with-airplay-2],[Build for AirPlay 2])])
 if test "x$with_airplay_2" = "xyes" ; then
   AC_DEFINE([CONFIG_AIRPLAY_2], 1, [Build for AirPlay 2])
-  AC_MSG_RESULT(>>Include libraries required for AirPlay 2)
   PKG_CHECK_MODULES([libplist], [libplist >= 2.0.0],[CFLAGS="${libplist_CFLAGS} ${CFLAGS}" LIBS="${libplist_LIBS} ${LIBS}"],[
     PKG_CHECK_MODULES([libplist], [libplist-2.0 >= 2.0.0],[CFLAGS="${libplist_CFLAGS} ${CFLAGS}" LIBS="${libplist_LIBS} ${LIBS}"],[
       AC_MSG_ERROR(AirPlay 2 support requires libplist 2.0.0 or later -- search for pkg libplist-dev on Debian or libplist-2.2.0 or later on FreeBSD!)
     ])
   ])
   PKG_CHECK_MODULES([libsodium], [libsodium],[CFLAGS="${libsodium_CFLAGS} ${CFLAGS}" LIBS="${libsodium_LIBS} ${LIBS}"],[AC_MSG_ERROR(AirPlay 2 support requires libsodium -- libsodium-dev suggested)])
-  PKG_CHECK_MODULES([libgcrypt], [libgcrypt],[CFLAGS="${libgcrypt_CFLAGS} ${CFLAGS}" LIBS="${libgcrypt_LIBS} ${LIBS}"],[AC_MSG_ERROR(AirPlay 2 support requires libgcrypt -- libgcrypt-dev suggested)])
-  AC_CHECK_LIB([avutil],[av_malloc], [], [AC_MSG_ERROR([Airplay 2 support requires libavutil -- libavutil-dev suggested])])
+  PKG_CHECK_MODULES([libavutil], [libavutil],[CFLAGS="${libavutil_CFLAGS} ${CFLAGS}" LIBS="${libavutil_LIBS} ${LIBS}"],[
+      AC_MSG_ERROR(AirPlay 2 support requires libavutil -- libavutil-dev suggested)])
   PKG_CHECK_MODULES([libavcodec], [libavcodec],[CFLAGS="${libavcodec_CFLAGS} ${CFLAGS}" LIBS="${libavcodec_LIBS} ${LIBS}"],[
       AC_MSG_ERROR(AirPlay 2 support requires libavcodec -- libavcodec-dev suggested)])
   AC_CHECK_LIB([avformat],[avformat_new_stream], [], [AC_MSG_ERROR([AirPlay 2 support requires libavformat -- libavformat-dev suggested])])
@@ -451,7 +447,6 @@ fi
 AM_CONDITIONAL([HAVE_XMLTOMAN], [test -n "$XMLTOMAN"])
 
 # Checks for header files.
-AC_HEADER_STDC
 AC_CHECK_HEADERS([getopt_long.h])
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h mach/mach.h memory.h netdb.h netinet/in.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h syslog.h unistd.h])
 

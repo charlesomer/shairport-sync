@@ -45,7 +45,6 @@
 
 #ifdef CONFIG_AIRPLAY_2
 #include "ptp-utilities.h"
-#include <gcrypt.h>
 #include <libavcodec/avcodec.h>
 #include <sodium.h>
 #include <uuid/uuid.h>
@@ -159,7 +158,7 @@ int has_fltp_capable_aac_decoder(void) {
     const enum AVSampleFormat *p = codec->sample_fmts;
     if (p != NULL) {
       while ((has_capability == 0) && (*p != AV_SAMPLE_FMT_NONE)) {
-         if (*p == AV_SAMPLE_FMT_FLTP)
+        if (*p == AV_SAMPLE_FMT_FLTP)
           has_capability = 1;
         p++;
       }
@@ -1379,7 +1378,7 @@ int parse_options(int argc, char **argv) {
            config.appName, temporary_airplay_id);
   // debug(1, "smi name: \"%s\"", shared_memory_interface_name);
 
-  config.nqptp_shared_memory_interface_name = strdup(shared_memory_interface_name);
+  config.nqptp_shared_memory_interface_name = strdup(NQPTP_INTERFACE_NAME);
 
   char apids[6 * 2 + 5 + 1]; // six pairs of digits, 5 colons and a NUL
   apids[6 * 2 + 5] = 0;      // NUL termination
@@ -1454,9 +1453,9 @@ int parse_options(int argc, char **argv) {
   // now, do the substitutions in the service name
   char hostname[100];
   gethostname(hostname, 100);
-  
+
   // strip off a terminating .<anything>, e.g. .local from the hostname
-  char *last_dot = strrchr(hostname,'.');
+  char *last_dot = strrchr(hostname, '.');
   if (last_dot != NULL)
     *last_dot = '\0';
 
@@ -1574,10 +1573,10 @@ void exit_function() {
       if (g_main_loop) {
         debug(2, "Stopping D-Bus Loop Thread");
         g_main_loop_quit(g_main_loop);
-        
-        // If the request to exit has come from the D-Bus system, 
+
+        // If the request to exit has come from the D-Bus system,
         // the D-Bus Loop Thread will not exit until the request is completed
-        // so don't wait for it 
+        // so don't wait for it
         if (type_of_exit_cleanup != TOE_dbus)
           pthread_join(dbus_thread, NULL);
       }
@@ -2023,10 +2022,10 @@ int main(int argc, char **argv) {
   apfh = apfh >> 32;
   uint32_t apf32 = apf;
   uint32_t apfh32 = apfh;
-  debug(1, "startup in Airplay 2 mode with features 0x%" PRIx32 ",0x%" PRIx32 " on device \"%s\".",
+  debug(1, "startup in AirPlay 2 mode, with features 0x%" PRIx32 ",0x%" PRIx32 " on device \"%s\".",
         apf32, apfh32, config.airplay_device_id);
 #else
-  debug(1, "startup in Airplay 1 mode.");
+  debug(1, "startup in classic Airplay (aka \"AirPlay 1\") mode.");
 #endif
 
   // control-c (SIGINT) cleanly
@@ -2104,28 +2103,6 @@ int main(int argc, char **argv) {
     debug(1, "libsodium initialised.");
   }
 
-  // this code is based on
-  // https://www.gnupg.org/documentation/manuals/gcrypt/Initializing-the-library.html
-
-  /* Version check should be the very first call because it
-    makes sure that important subsystems are initialized.
-    #define NEED_LIBGCRYPT_VERSION to the minimum required version. */
-
-#define NEED_LIBGCRYPT_VERSION "1.5.4"
-
-  if (!gcry_check_version(NEED_LIBGCRYPT_VERSION)) {
-    die("libgcrypt is too old (need %s, have %s).", NEED_LIBGCRYPT_VERSION,
-        gcry_check_version(NULL));
-  }
-
-  /* Disable secure memory.  */
-  gcry_control(GCRYCTL_DISABLE_SECMEM, 0);
-
-  /* ... If required, other initialization goes here.  */
-
-  /* Tell Libgcrypt that initialization has completed. */
-  gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0);
-
 #endif
 
   /* Mess around with the latency options */
@@ -2180,8 +2157,9 @@ int main(int argc, char **argv) {
   debug(1, "mdns backend \"%s\".", strnull(config.mdns_name));
   debug(2, "userSuppliedLatency is %d.", config.userSuppliedLatency);
   debug(1, "interpolation setting is \"%s\".",
-        config.packet_stuffing == ST_basic ? "basic"
-                                           : config.packet_stuffing == ST_soxr ? "soxr" : "auto");
+        config.packet_stuffing == ST_basic  ? "basic"
+        : config.packet_stuffing == ST_soxr ? "soxr"
+                                            : "auto");
   debug(1, "interpolation soxr_delay_threshold is %d.", config.soxr_delay_threshold);
   debug(1, "resync time is %f seconds.", config.resyncthreshold);
   debug(1, "allow a session to be interrupted: %d.", config.allow_session_interruption);
@@ -2338,7 +2316,8 @@ int main(int argc, char **argv) {
     ptp_send_control_message_string("T"); // get nqptp to create the named shm interface
     usleep(ptp_wait_interval_us);
     ptp_check_times++;
-  } while ((ptp_shm_interface_open() != 0) && (ptp_check_times < (10000000 / ptp_wait_interval_us)));
+  } while ((ptp_shm_interface_open() != 0) &&
+           (ptp_check_times < (10000000 / ptp_wait_interval_us)));
 
   if (ptp_shm_interface_open() != 0) {
     die("Can't access NQPTP! Is it installed and running?");

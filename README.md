@@ -1,7 +1,7 @@
 # Shairport Sync
 Shairport Sync is an [AirPlay](https://www.pocket-lint.com/speakers/news/apple/144646-apple-airplay-2-vs-airplay-what-s-the-difference) audio player for Linux and FreeBSD. It plays audio streamed from Apple devices and from AirPlay sources such as [OwnTone](https://github.com/owntone/owntone-server) (formerly `forked-daapd`).
 
-Shairport Sync can be built as an AirPlay 2 player (with [some limitations](https://github.com/mikebrady/shairport-sync/blob/development/AIRPLAY2.md#features-and-limitations)) or as "classic" Shairport Sync – a player for the older, but still supported, AirPlay (aka "AirPlay 1") protocol.
+Shairport Sync can be built as an AirPlay 2 player (with [some limitations](AIRPLAY2.md#features-and-limitations)) or as "classic" Shairport Sync – a player for the older, but still supported, AirPlay (aka "AirPlay 1") protocol.
 
 Metadata such as artist information and cover art can be requested and provided to other applications. Shairport Sync can interface with other applications through MQTT, an MPRIS-like interface and D-Bus.
 
@@ -17,7 +17,7 @@ Shairport Sync does not support AirPlay video or photo streaming.
 # Features
 * Outputs AirPlay audio to [ALSA](https://www.alsa-project.org/wiki/Main_Page), [sndio](http://www.sndio.org), [PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/), [Jack Audio](http://jackaudio.org), to a unix pipe or to `STDOUT`. It also has experimental support for [PipeWire](https://pipewire.org) and limited support for [libao](https://xiph.org/ao/) and for [libsoundio](http://libsound.io).
 * Metadata — Shairport Sync can deliver metadata supplied by the source, such as Album Name, Artist Name, Cover Art, etc. through a pipe or UDP socket to a recipient application program — see https://github.com/mikebrady/shairport-sync-metadata-reader for a sample recipient. Sources that supply metadata include iTunes and the Music app in macOS and iOS.
-* An interface to [MQTT](https://en.wikipedia.org/wiki/MQTT), a popular protocol for Inter Process Communication, Machine-to-Machine, Internet of Things and Home Automation projects. The interface including access to metadata and artwork, and limited remote control.
+* An interface to [MQTT](https://en.wikipedia.org/wiki/MQTT), a popular protocol for Inter Process Communication, Machine-to-Machine, Internet of Things and Home Automation projects. The interface provides access to metadata and artwork, and has limited remote control.
 * Digital Signal Processing facilities – please see the [DSP Wiki Page Guide](https://github.com/mikebrady/shairport-sync/wiki/Digital-Signal-Processing-with-Shairport-Sync). (Thanks to [Yann Pomarède](https://github.com/yannpom) for the code and to [Paul Wieland](https://github.com/PaulWieland) for the guide.)
 * An [MPRIS](https://specifications.freedesktop.org/mpris-spec/2.2/)-like interface, partially complete and very functional, including access to metadata and artwork, and limited remote control.
 * A native D-Bus interface, including access to metadata and artwork, limited remote control and system settings.
