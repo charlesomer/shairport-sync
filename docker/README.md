@@ -1,6 +1,6 @@
 # Shairport Sync Docker Image
 
-https://hub.docker.com/r/mikebrady/shairport-sync
+Available at: https://hub.docker.com/r/mikebrady/shairport-sync
 
 The following docker tags are available:
 ```
@@ -9,11 +9,11 @@ The following docker tags are available:
 
 (build from newest tag)
 stable
-stable-classic (will exist after AirPlay 2 is merged and tagged)
+stable-classic
 
 (latest build from master)
 latest
-latest-classic (will exist after AirPlay 2 is merged)
+latest-classic
 
 (latest build from development)
 development
