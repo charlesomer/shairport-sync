@@ -1,4 +1,4 @@
-FROM alpine:3.12 AS builder-base
+FROM alpine AS builder-base
 # General Build System:
 RUN apk -U add \
         git \
@@ -41,7 +41,7 @@ COPY --from=builder-alac /usr/local/lib/libalac.* /usr/local/lib/
 COPY --from=builder-alac /usr/local/lib/pkgconfig/alac.pc /usr/local/lib/pkgconfig/alac.pc
 COPY --from=builder-alac /usr/local/include /usr/local/include
 
-WORKDIR shairport-sync
+WORKDIR /shairport-sync
 COPY . .
 RUN git checkout "$SHAIRPORT_SYNC_BRANCH"
 RUN autoreconf -fi
@@ -63,7 +63,7 @@ RUN make -j $(nproc)
 RUN make install
 
 # Shairport Sync Runtime System:
-FROM alpine:3.12
+FROM alpine
 
 RUN apk -U add \
         alsa-lib \
@@ -73,6 +73,7 @@ RUN apk -U add \
         mbedtls \
         soxr \
         avahi \
+        avahi-tools \
         libconfig \
         libsndfile \
         mosquitto-libs \
@@ -80,7 +81,7 @@ RUN apk -U add \
         libgcc \
         libgc++
 
-RUN rm -rf  /lib/apk/db/*
+RUN rm -rf /lib/apk/db/*
 
 COPY --from=builder-alac /usr/local/lib/libalac.* /usr/local/lib/
 COPY --from=builder-sps /etc/shairport-sync* /etc/
