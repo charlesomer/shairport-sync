@@ -12,10 +12,9 @@ name: Formal (X, X.Y or X.Y.Z) release tags -- docker build and push.
 on:
   push:
     tags:
-      - '[0-9]+\.[0-9]+\.[0-9]+'  # e.g. 8.9.0
-      - '[0-9]+\.[0-9]+'  # e.g. 8.9
-      - '[0-9]+'  # e.g. 8
-      - '[0-9]+\.[0-9]+rc[0-9]+' # e.g. 4.1rc0
+      - '^[0-9]+\.[0-9]+\.[0-9]+$'  # e.g. 8.9.0
+      - '^[0-9]+\.[0-9]+$'  # e.g. 8.9
+      - '^[0-9]+$'  # e.g. 8
 
 env:
   DOCKER_PLATFORMS: linux/386,linux/amd64,linux/arm/v6,linux/arm64,linux/arm/v7
@@ -66,7 +65,7 @@ jobs:
           file: ./docker/Dockerfile
           platforms: ${{ env.DOCKER_PLATFORMS }}
           push: true
-          tags: trial
+          tags: latest
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
             NQPTP_BRANCH=${{ env.NQPTP_BRANCH }}
@@ -78,6 +77,6 @@ jobs:
           file: ./docker/classic/Dockerfile
           platforms: ${{ env.DOCKER_PLATFORMS }}
           push: true
-          tags: trial-classic
+          tags: latest-classic
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
