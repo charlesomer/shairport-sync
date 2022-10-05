@@ -59,7 +59,7 @@ jobs:
           platforms: ${{ env.DOCKER_PLATFORMS }}
           push: ${{ env.IMAGE_TAG_BASE != '' }}
           tags: |
-            ${{ env.IMAGE_TAG_BASE != '' && format('{0}:{1}', secrets.DOCKER_IMAGE_NAME), ${{ env.IMAGE_TAG_BASE }} || '' }}
+            ${{ env.IMAGE_TAG_BASE != '' && format('{0}:{1}', secrets.DOCKER_IMAGE_NAME, env.IMAGE_TAG_BASE) || '' }}
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
             NQPTP_BRANCH=${{ env.NQPTP_BRANCH }}
@@ -72,6 +72,6 @@ jobs:
           platforms: ${{ env.DOCKER_PLATFORMS }}
           push: ${{ env.IMAGE_TAG_BASE != '' }}
           tags: |
-            ${{ env.IMAGE_TAG_BASE != '' && format('{0}:{1}-classic', secrets.DOCKER_IMAGE_NAME), ${{ env.IMAGE_TAG_BASE }} || '' }}
+            ${{ env.IMAGE_TAG_BASE != '' && format('{0}:{1}-classic', secrets.DOCKER_IMAGE_NAME, env.IMAGE_TAG_BASE) || '' }}
           build-args: |
             SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
