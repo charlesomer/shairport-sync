@@ -39,10 +39,21 @@ COPY . .
 RUN git checkout "$SHAIRPORT_SYNC_BRANCH"
 WORKDIR /shairport-sync/build
 RUN autoreconf -i ../
-RUN ../configure --sysconfdir=/etc --with-alsa --with-soxr --with-avahi --with-ssl=mbedtls \
-        --with-metadata --with-dummy --with-pipe --with-dbus-interface \
-        --with-stdout --with-mpris-interface --with-mqtt-client \
-        --with-apple-alac --with-convolution
+RUN ../configure \
+        --sysconfdir=/etc \
+        --with-alsa \
+        --with-soxr \
+        --with-avahi \
+        --with-ssl=mbedtls \
+        --with-metadata \
+        --with-dummy \
+        --with-pipe \
+        --with-dbus-interface \
+        --with-stdout \
+        --with-mpris-interface \
+        --with-mqtt-client \
+        --with-apple-alac \
+        --with-convolution
 RUN make -j $(nproc)
 RUN DESTDIR=install make install
 WORKDIR /
@@ -85,3 +96,5 @@ RUN chmod +x /etc/s6-overlay/s6-rc.d/startup/script.sh
 RUN rm -rf /lib/apk/db/*
 
 ENTRYPOINT [ "/init" ]
+
+CMD [ "/usr/local/bin/shairport-sync",  "-v",  "--statistics" ]
