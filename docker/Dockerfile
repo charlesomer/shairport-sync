@@ -16,21 +16,17 @@ RUN apk -U add \
         dbus \
         alsa-lib-dev \
         popt-dev \
-        mbedtls-dev \
         soxr-dev \
         avahi-dev \
         libconfig-dev \
         libsndfile-dev \
         mosquitto-dev \
-        xmltoman \
-        openssh-client \
         libsodium-dev \
         ffmpeg-dev \
         xxd \
         libressl-dev \
         openssl-dev \
-        libplist-dev \
-        libgcrypt-dev
+        libplist-dev
 
 ##### ALAC #####
 RUN git clone https://github.com/mikebrady/alac
@@ -88,7 +84,6 @@ RUN apk -U add \
         dbus \
         popt \
         glib \
-        mbedtls \
         soxr \
         avahi \
         avahi-tools \
@@ -98,8 +93,7 @@ RUN apk -U add \
         libuuid \
         ffmpeg \
         libsodium \
-        libplist \
-        libgcrypt
+        libplist
 
 # Copy build files.
 COPY --from=builder /shairport-sync/build/install/usr/local/bin/shairport-sync /usr/local/bin/shairport-sync
