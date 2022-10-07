@@ -75,7 +75,6 @@ RUN apk -U add \
         mosquitto \
         libsndfile-dev
 
-
 # Copy build files.
 COPY --from=builder /shairport-sync/build/install/usr/local/bin/shairport-sync /usr/local/bin/shairport-sync
 COPY --from=builder /usr/local/lib/libalac.* /usr/local/lib/
