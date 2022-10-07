@@ -97,4 +97,4 @@ RUN rm -rf /lib/apk/db/*
 
 ENTRYPOINT [ "/init" ]
 
-CMD [ "/usr/local/bin/shairport-sync",  "-v",  "--statistics" ]
+CMD [ "/usr/local/bin/shairport-sync", "-v", "--statistics" ]
