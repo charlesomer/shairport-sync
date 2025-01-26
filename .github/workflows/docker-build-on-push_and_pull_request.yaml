@@ -4,6 +4,7 @@
 # 'master'      - rolling, rolling-classic
 # 'development' - development, development-classic
 
+
 name: Build and push docker (push/pull request)
 
 on:
