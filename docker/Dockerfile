@@ -118,7 +118,8 @@ RUN apk -U add \
         mosquitto \
         popt \
         soxr \
-        curl
+        curl \
+        dhclient
 
 RUN rm -rfv /lib/apk/db/* && \
     rm -rfv /etc/avahi/services/*.service && \
