@@ -1,3 +1,18 @@
+
+Version 4.3.7-dev-24-gbc5001eb
+==
+This is effectively release 4.3.7.
+
+**Dependabot Updates**
+
+* A number of deferred Dependabot-originated updates have been accepted. They all relate to (limited) automated testing and Docker image creation.
+  
+Version 4.3.7-dev-11-g7367d042
+==
+**Automated Docker Build Fixes**
+
+* Thanks to [Charles Omer](https://github.com/charlesomer) for [fixes](https://github.com/mikebrady/shairport-sync/pull/1961) to the Github Action scripts for building and pushing Docker images.
+  
 Version 4.3.7-dev-3-g802058fe
 ==
 **Docker Enhancement**
