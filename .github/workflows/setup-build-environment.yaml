@@ -1,0 +1,35 @@
+on:
+  workflow_call:
+
+env:
+  DOCKER_PLATFORMS: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+  NQPTP_BRANCH: main
+  SHAIRPORT_SYNC_BRANCH: ${{ github.head_ref || github.ref_name }}
+  
+jobs:
+  setup-build-environment:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.3.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.8.0
+
+      - name: Is branch "master"?
+        if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'master' }}
+        run: |
+          echo "IMAGE_TAG_BASE=rolling" >> $GITHUB_ENV
+
+      - name: Is branch "development"?
+        if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'development' }}
+        run: |
+          echo "NQPTP_BRANCH=development" >> $GITHUB_ENV
+          echo "IMAGE_TAG_BASE=development" >> $GITHUB_ENV

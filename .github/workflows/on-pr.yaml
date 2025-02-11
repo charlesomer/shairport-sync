@@ -1,0 +1,37 @@
+# Builds a docker image when a PR is made.
+
+name: Build docker (on pull request).
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  setup-build-environment:
+    uses: ./.github/workflows/setup-build-environment.yaml
+
+  docker-login:
+    uses: ./.github/workflows/docker-login.yaml
+
+  build-and-publish:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Build (classic)
+        uses: docker/build-push-action@v6.13.0
+        with:
+          context: ./
+          file: ./docker/classic/Dockerfile
+          push: false
+          build-args: |
+            SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
+ 
+      - name: Build
+        uses: docker/build-push-action@v6.13.0
+        with:
+          context: ./
+          file: ./docker/Dockerfile
+          push: false
+          build-args: |
+            SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
+            NQPTP_BRANCH=${{ env.NQPTP_BRANCH }}

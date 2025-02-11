@@ -1,0 +1,47 @@
+# Builds a docker image when a commit is made to 'master' or 'development'.
+
+# Tag pattern
+# 'master'      - rolling, rolling-classic
+# 'development' - development, development-classic
+
+name: Build and push docker (on push).
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - development
+
+jobs:
+  setup-build-environment:
+    uses: ./.github/workflows/setup-build-environment.yaml
+
+  docker-login:
+    uses: ./.github/workflows/docker-login.yaml
+
+  build-and-publish:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Build and push (classic)
+        uses: docker/build-push-action@v6.13.0
+        with:
+          context: ./
+          file: ./docker/classic/Dockerfile
+          platforms: ${{ env.DOCKER_PLATFORMS }}
+          push: ${{ env.IMAGE_TAG_BASE != '' }}
+          tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG_BASE }}-classic
+          build-args: |
+            SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
+ 
+      - name: Build and push
+        uses: docker/build-push-action@v6.13.0
+        with:
+          context: ./
+          file: ./docker/Dockerfile
+          platforms: ${{ env.DOCKER_PLATFORMS }}
+          push: ${{ env.IMAGE_TAG_BASE != '' }}
+          tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG_BASE }}
+          build-args: |
+            SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
+            NQPTP_BRANCH=${{ env.NQPTP_BRANCH }}
