@@ -1,6 +1,6 @@
 # Builds a docker image when a PR is made.
 
-name: Build docker (on pull request).
+name: Build docker (on pull request)
 
 on:
   workflow_dispatch:
@@ -13,6 +13,7 @@ jobs:
 
   docker-login:
     uses: ./.github/workflows/docker-login.yaml
+    secrets: inherit
 
   build-and-publish:
     runs-on: ubuntu-22.04

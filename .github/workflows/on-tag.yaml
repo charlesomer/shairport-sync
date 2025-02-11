@@ -21,6 +21,7 @@ jobs:
 
   docker-login:
     uses: ./.github/workflows/docker-login.yaml
+    secrets: inherit
 
   build-and-publish:
     runs-on: ubuntu-22.04
