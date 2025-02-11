@@ -4,12 +4,17 @@ on:
 env:
   DOCKER_PLATFORMS: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
   NQPTP_BRANCH: main
-  SHAIRPORT_SYNC_BRANCH: ${{ github.head_ref || github.ref_name }}
   
 jobs:
   setup-build-environment:
     runs-on: ubuntu-22.04
     steps:
+      - name: Set SHAIRPORT_SYNC_BRANCH env.
+        run: |
+          raw=$(git branch -r --contains ${{ github.ref }})
+          branch=${raw##*/}
+          echo "SHAIRPORT_SYNC_BRANCH=${branch}" >> $GITHUB_ENV
+
       - name: Checkout Repo
         uses: actions/checkout@v4.2.2
         with:

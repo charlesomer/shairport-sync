@@ -26,6 +26,13 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-22.04
     steps:
+      - name: Set tag env
+        run: echo "GIT_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Is branch "master"?
+        if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'master' }}
+        run: echo "LATEST_TAG=true" >> $GITHUB_ENV
+
       - name: Build and push (classic)
         uses: docker/build-push-action@v6.13.0
         with:
