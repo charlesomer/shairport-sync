@@ -1,5 +1,15 @@
 on:
   workflow_call:
+    outputs:
+      SHAIRPORT_SYNC_BRANCH:
+        description: "The SPS branch."
+        value: ${{ jobs.setup-build-environment.outputs.SHAIRPORT_SYNC_BRANCH }}
+      IMAGE_TAG_BASE:
+        description: "First part of the docker tag (e.g. 'rolling' or 'development')"
+        value: ${{ jobs.setup-build-environment.outputs.IMAGE_TAG_BASE }}
+      NQPTP_BRANCH:
+        description: "The NQPTP branch."
+        value: ${{ jobs.setup-build-environment.outputs.NQPTP_BRANCH }}
 
 env:
   DOCKER_PLATFORMS: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
@@ -8,9 +18,12 @@ env:
 jobs:
   setup-build-environment:
     runs-on: ubuntu-22.04
+    outputs:
+      SHAIRPORT_SYNC_BRANCH: ${{ steps.sps-branch.outputs.SHAIRPORT_SYNC_BRANCH }}
     steps:
-      - name: Set SHAIRPORT_SYNC_BRANCH env.
-        run: echo "SHAIRPORT_SYNC_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+      - id: sps-branch
+        name: Set SHAIRPORT_SYNC_BRANCH env.
+        run: echo "SHAIRPORT_SYNC_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
 
       - name: Checkout Repo
         uses: actions/checkout@v4.2.2
