@@ -4,6 +4,9 @@ on:
       SHAIRPORT_SYNC_BRANCH:
         description: "The SPS branch."
         value: ${{ jobs.setup-build-environment.outputs.SHAIRPORT_SYNC_BRANCH }}
+      DOCKER_PLATFORMS:
+        description: "The docker platforms."
+        value: ${{ jobs.setup-build-environment.outputs.DOCKER_PLATFORMS }}
       IMAGE_TAG_BASE:
         description: "First part of the docker tag (e.g. 'rolling' or 'development')"
         value: ${{ jobs.setup-build-environment.outputs.IMAGE_TAG_BASE }}
@@ -19,13 +22,13 @@ jobs:
   setup-build-environment:
     runs-on: ubuntu-22.04
     outputs:
-      SHAIRPORT_SYNC_BRANCH: ${{ steps.sps-branch.outputs.SHAIRPORT_SYNC_BRANCH }}
-      IMAGE_TAG_BASE: ${{ steps.sps-branch.outputs.IMAGE_TAG_BASE }}
-      NQPTP_BRANCH: ${{ steps.sps-branch.outputs.NQPTP_BRANCH }}
+      SHAIRPORT_SYNC_BRANCH: ${{ steps.set-outputs.outputs.SHAIRPORT_SYNC_BRANCH }}
+      IMAGE_TAG_BASE: ${{ steps.set-outputs.outputs.IMAGE_TAG_BASE }}
+      NQPTP_BRANCH: ${{ steps.set-outputs.outputs.NQPTP_BRANCH }}
+      DOCKER_PLATFORMS: ${{ steps.set-outputs.outputs.DOCKER_PLATFORMS }}
     steps:
-      - id: sps-branch
-        name: Set SHAIRPORT_SYNC_BRANCH env.
-        run: echo "SHAIRPORT_SYNC_BRANCH=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
+      - name: Set SHAIRPORT_SYNC_BRANCH env.
+        run: echo "SHAIRPORT_SYNC_BRANCH=${GITHUB_REF##*/}" >> "$GITHUB_ENV"
 
       - name: Checkout Repo
         uses: actions/checkout@v4.2.2
@@ -43,11 +46,18 @@ jobs:
       - name: Is branch "master"?
         if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'master' }}
         run: |
-          echo "IMAGE_TAG_BASE=rolling" >> "$GITHUB_OUTPUT"
+          echo "IMAGE_TAG_BASE=rolling" >> "$GITHUB_ENV"
 
       - name: Is branch "development"?
         if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'development' }}
         run: |
-          echo "NQPTP_BRANCH=development" >> "$GITHUB_OUTPUT"
-          echo "IMAGE_TAG_BASE=development" >> "$GITHUB_OUTPUT"
+          echo "NQPTP_BRANCH=development" >> "$GITHUB_ENV"
+          echo "IMAGE_TAG_BASE=development" >> "$GITHUB_ENV"
 
+      - name: Set outputs.
+        id: set-outputs
+        run: |
+          echo "SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}" >> "$GITHUB_OUTPUT"
+          echo "DOCKER_PLATFORMS=${{ env.DOCKER_PLATFORMS }}" >> "$GITHUB_OUTPUT"
+          echo "NQPTP_BRANCH=${{ env.NQPTP_BRANCH }}" >> "$GITHUB_OUTPUT"
+          echo "IMAGE_TAG_BASE=${{ env.IMAGE_TAG_BASE }}" >> "$GITHUB_OUTPUT"

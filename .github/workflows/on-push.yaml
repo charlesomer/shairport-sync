@@ -24,16 +24,23 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-22.04
     steps:
+      - name: Set env variables
+        run: |
+          echo "DOCKER_PLATFORMS=${{ needs.setup-build-environments.outputs.DOCKER_PLATFORMS }}" >> "$GITHUB_ENV"
+          echo "IMAGE_TAG_BASE=${{ needs.setup-build-environments.outputs.IMAGE_TAG_BASE }}" >> "$GITHUB_ENV"
+          echo "SHAIRPORT_SYNC_BRANCH=${{ needs.setup-build-environments.outputs.SHAIRPORT_SYNC_BRANCH }}" >> "$GITHUB_ENV"
+          echo "NQPTP_BRANCH=${{ needs.setup-build-environments.outputs.NQPTP_BRANCH }}" >> "$GITHUB_ENV"
+
       - name: Build and push (classic)
         uses: docker/build-push-action@v6.13.0
         with:
           context: ./
           file: ./docker/classic/Dockerfile
           platforms: ${{ env.DOCKER_PLATFORMS }}
-          push: ${{ needs.setup-build-environment.outputs.IMAGE_TAG_BASE != '' }}
-          tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ needs.setup-build-environment.outputs.IMAGE_TAG_BASE }}-classic
+          push: ${{ env.IMAGE_TAG_BASE != '' }}
+          tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG_BASE }}-classic
           build-args: |
-            SHAIRPORT_SYNC_BRANCH=${{ needs.setup-build-environment.outputs.SHAIRPORT_SYNC_BRANCH }}
+            SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
  
       - name: Build and push
         uses: docker/build-push-action@v6.13.0
@@ -41,8 +48,8 @@ jobs:
           context: ./
           file: ./docker/Dockerfile
           platforms: ${{ env.DOCKER_PLATFORMS }}
-          push: ${{ needs.setup-build-environment.outputs.IMAGE_TAG_BASE != '' }}
-          tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ needs.setup-build-environment.outputs.IMAGE_TAG_BASE }}
+          push: ${{ env.IMAGE_TAG_BASE != '' }}
+          tags: ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG_BASE }}
           build-args: |
-            SHAIRPORT_SYNC_BRANCH=${{ needs.setup-build-environment.outputs.SHAIRPORT_SYNC_BRANCH }}
-            NQPTP_BRANCH=${{ needs.setup-build-environment.outputs.NQPTP_BRANCH }}
+            SHAIRPORT_SYNC_BRANCH=${{ env.SHAIRPORT_SYNC_BRANCH }}
+            NQPTP_BRANCH=${{ env.NQPTP_BRANCH }}
