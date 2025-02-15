@@ -20,10 +20,12 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       SHAIRPORT_SYNC_BRANCH: ${{ steps.sps-branch.outputs.SHAIRPORT_SYNC_BRANCH }}
+      IMAGE_TAG_BASE: ${{ steps.sps-branch.outputs.IMAGE_TAG_BASE }}
+      NQPTP_BRANCH: ${{ steps.sps-branch.outputs.NQPTP_BRANCH }}
     steps:
       - id: sps-branch
         name: Set SHAIRPORT_SYNC_BRANCH env.
-        run: echo "SHAIRPORT_SYNC_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+        run: echo "SHAIRPORT_SYNC_BRANCH=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
 
       - name: Checkout Repo
         uses: actions/checkout@v4.2.2
@@ -41,10 +43,11 @@ jobs:
       - name: Is branch "master"?
         if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'master' }}
         run: |
-          echo "IMAGE_TAG_BASE=rolling" >> $GITHUB_ENV
+          echo "IMAGE_TAG_BASE=rolling" >> "$GITHUB_OUTPUT"
 
       - name: Is branch "development"?
         if: ${{ env.SHAIRPORT_SYNC_BRANCH == 'development' }}
         run: |
-          echo "NQPTP_BRANCH=development" >> $GITHUB_ENV
-          echo "IMAGE_TAG_BASE=development" >> $GITHUB_ENV
+          echo "NQPTP_BRANCH=development" >> "$GITHUB_OUTPUT"
+          echo "IMAGE_TAG_BASE=development" >> "$GITHUB_OUTPUT"
+
