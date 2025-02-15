@@ -26,10 +26,10 @@ jobs:
     steps:
       - name: Set env variables
         run: |
-          echo "DOCKER_PLATFORMS=${{ needs.setup-build-environments.outputs.DOCKER_PLATFORMS }}" >> "$GITHUB_ENV"
-          echo "IMAGE_TAG_BASE=${{ needs.setup-build-environments.outputs.IMAGE_TAG_BASE }}" >> "$GITHUB_ENV"
-          echo "SHAIRPORT_SYNC_BRANCH=${{ needs.setup-build-environments.outputs.SHAIRPORT_SYNC_BRANCH }}" >> "$GITHUB_ENV"
-          echo "NQPTP_BRANCH=${{ needs.setup-build-environments.outputs.NQPTP_BRANCH }}" >> "$GITHUB_ENV"
+          echo "DOCKER_PLATFORMS=${{ needs.setup-build-environment.outputs.DOCKER_PLATFORMS }}" >> "$GITHUB_ENV"
+          echo "IMAGE_TAG_BASE=${{ needs.setup-build-environment.outputs.IMAGE_TAG_BASE }}" >> "$GITHUB_ENV"
+          echo "SHAIRPORT_SYNC_BRANCH=${{ needs.setup-build-environment.outputs.SHAIRPORT_SYNC_BRANCH }}" >> "$GITHUB_ENV"
+          echo "NQPTP_BRANCH=${{ needs.setup-build-environment.outputs.NQPTP_BRANCH }}" >> "$GITHUB_ENV"
 
       - name: Build and push (classic)
         uses: docker/build-push-action@v6.13.0
