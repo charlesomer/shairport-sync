@@ -44,6 +44,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
+
       - name: Determine which branch the tag belongs to
         id: determine_branch
         if: github.ref_type == 'tag'
