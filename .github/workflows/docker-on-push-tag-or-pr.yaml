@@ -4,7 +4,6 @@
 # 'master' branch      - rolling, rolling-classic (for commits)
 #                      - [tag], [tag]-classic, latest, classic (for tags)
 # 'development' branch - development, development-classic (for all pushes including tags)
-
 # Builds but does not push a docker image for PRs.
 name: Build and conditionally push docker image
 on:
@@ -30,12 +29,10 @@ jobs:
         include:
           - name: classic
             dockerfile: ./docker/classic/Dockerfile
-            tag_suffix: -classic
             build_args: |
               SHAIRPORT_SYNC_BRANCH=.
           - name: main
             dockerfile: ./docker/Dockerfile
-            tag_suffix: ""
             build_args: |
               SHAIRPORT_SYNC_BRANCH=.
               NQPTP_BRANCH=${{ needs.docker-vars.outputs.nqptp_branch }}
